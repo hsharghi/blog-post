@@ -4,6 +4,7 @@ import Vapor
 struct PostController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let postRoutes = routes.grouped("post")
+        postRoutes.get("", use: listPublishedPosts)
         postRoutes.post("", use: createPost)
         postRoutes.get(":userId", use: listPosts)
         postRoutes.delete(":postId", use: deletePost)
@@ -67,6 +68,10 @@ struct PostController: RouteCollection {
         }
         try await post.delete(on: req.db)
         return .init(status: .ok)
+    }
+    
+    func listPublishedPosts(req: Request) async throws -> [Post] {
+        return []
     }
 
 }
