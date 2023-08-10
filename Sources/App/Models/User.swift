@@ -1,6 +1,12 @@
 import Fluent
 import Vapor
 
+enum Priority {
+    case low
+    case normal
+    case high
+}
+
 final class User: Model, Content {
     static let schema = "users"
     
@@ -12,9 +18,12 @@ final class User: Model, Content {
 
     @Field(key: "username")
     var username: String?
-
-    public init() { }
     
+    @Children(for: \.$owner)
+    var posts: [Post]
+    
+    public init() { }
+
     public init(id: UUID? = nil, name: String, username: String? = nil) {
         self.id = id
         self.name = name

@@ -12,6 +12,7 @@ public func configure(_ app: Application) async throws {
 
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateUserSchema())
+    app.migrations.add(CreatePostSchema())
 
     try await app.autoMigrate()
     
