@@ -6,6 +6,7 @@ struct CreateUserSchema: AsyncMigration {
             .id()
             .field("name", .string, .required)
             .field("username", .string)
+            .unique(on: "name")
             .create()
     }
 
