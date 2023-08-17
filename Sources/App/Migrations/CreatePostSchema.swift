@@ -12,8 +12,6 @@ struct CreatePostSchema: AsyncMigration {
             enumBuilder = enumBuilder.case(type.rawValue)
         }
         let accountType = try await enumBuilder.create()
-
-
         
         try await database.schema(Post.schema)
             .id()
