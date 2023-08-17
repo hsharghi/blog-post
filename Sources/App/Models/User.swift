@@ -19,14 +19,29 @@ final class User: Model, Content {
     @Field(key: "username")
     var username: String?
     
+    @Field(key: "password")
+    var password: String
+    
     @Children(for: \.$owner)
     var posts: [Post]
     
     public init() { }
 
-    public init(id: UUID? = nil, name: String, username: String? = nil) {
+    public init(id: UUID? = nil, name: String, username: String? = nil, password: String) {
         self.id = id
         self.name = name
         self.username = username
+        self.password = password
+    }
+}
+
+extension User {
+    struct PublicUser: Content {
+        var name: String
+        var username: String?
+    }
+    
+    func toPublic() -> PublicUser {
+        PublicUser(name: self.name, username: self.username)
     }
 }
