@@ -13,9 +13,12 @@ public func configure(_ app: Application) async throws {
     app.migrations.add(CreateTodo())
     app.migrations.add(CreateUserSchema())
     app.migrations.add(CreatePostSchema())
+    app.migrations.add(AddPasswordFieldToUser())
+    app.migrations.add(CreateUserTokens())
 
     try await app.autoMigrate()
-    
+    app.passwords.use(.bcrypt)
+
     // register routes
     try routes(app)
 }
