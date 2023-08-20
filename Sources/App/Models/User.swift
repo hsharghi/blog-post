@@ -7,7 +7,7 @@ enum Priority {
     case high
 }
 
-final class User: Model, Content {
+final class User: Model, Content, Authenticatable {
     static let schema = "users"
     
     @ID(key: .id)
@@ -45,3 +45,5 @@ extension User {
         PublicUser(name: self.name, username: self.username)
     }
 }
+
+

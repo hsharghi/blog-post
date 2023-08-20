@@ -35,3 +35,14 @@ final class Token: Model, Content {
     }
 
 }
+
+extension Token: ModelTokenAuthenticatable {
+        
+    static var valueKey = \Token.$token
+    static let userKey = \Token.$user
+
+    var isValid: Bool {
+        self.expiresAt > Date()
+    }
+    
+}
