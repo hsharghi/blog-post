@@ -62,10 +62,19 @@ struct UserController: RouteCollection {
         }
         
         let tokenString = try req.password.hash(String(Int.random()))
-        let token = Token(userId: try foundUser.requireID(),
-                          token: tokenString,
-                          expiresAt: Date().addingTimeInterval(60 * 60))
-        try await token.save(on: req.db)
+        let tokenData = try await Token.query(on: req.db)
+            .filter(\.$user.$id == foundUser.requireID())
+            .first()
+        if let tokenData {
+            tokenData.token = tokenString
+            tokenData.expiresAt = Date().addingTimeInterval(60 * 60)
+            try await tokenData.update(on: req.db)
+        } else {
+            let token = Token(userId: try foundUser.requireID(),
+                              token: tokenString,
+                              expiresAt: Date().addingTimeInterval(60 * 60))
+            try await token.save(on: req.db)
+        }
         return TokenResponse(token: tokenString)
     }
     
