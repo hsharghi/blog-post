@@ -19,7 +19,7 @@ final class Post: Model, Content {
     @Field(key: "content")
     var content: String
     
-    @Enum(key: "status")
+    @Enum(key: "post_status")
     var status: PostStatus
     
     @Parent(key: "user_id")
