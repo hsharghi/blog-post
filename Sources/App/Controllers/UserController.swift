@@ -45,8 +45,11 @@ struct UserController: RouteCollection {
         var password: String
     }
     
+    struct TokenResponse: Content {
+        var token: String
+    }
 
-    func loginUser(req: Request) async throws -> String {
+    func loginUser(req: Request) async throws -> TokenResponse {
         let data = try req.content.decode(LoginUseRequest.self)
         let foundUser = try await User.query(on: req.db)
             .filter(\.$name == data.name)
@@ -63,7 +66,7 @@ struct UserController: RouteCollection {
                           token: tokenString,
                           expiresAt: Date().addingTimeInterval(60 * 60))
         try await token.save(on: req.db)
-        return tokenString
+        return TokenResponse(token: tokenString)
     }
     
     func listUsers(req: Request) async throws -> [User] {
