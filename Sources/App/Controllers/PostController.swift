@@ -4,12 +4,13 @@ import Vapor
 struct PostController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let postRoutes = routes.grouped("post")
+        let postProtectedRoutes = postRoutes
             .grouped(Token.authenticator())
         
         postRoutes.get("", use: listPublishedPosts)
-        postRoutes.post("", use: createPost)
-        postRoutes.get(":userId", use: listPosts)
-        postRoutes.delete(":postId", use: deletePost)
+        postProtectedRoutes.post("", use: createPost)
+        postProtectedRoutes.get(":userId", use: listPosts)
+        postProtectedRoutes.delete(":postId", use: deletePost)
         //
         //        let todos = routes.grouped("todos")
         //        todos.get(use: index)
