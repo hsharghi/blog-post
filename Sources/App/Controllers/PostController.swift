@@ -4,6 +4,8 @@ import Vapor
 struct PostController: RouteCollection {
     func boot(routes: RoutesBuilder) throws {
         let postRoutes = routes.grouped("post")
+            .grouped(Token.authenticator())
+        
         postRoutes.get("", use: listPublishedPosts)
         postRoutes.post("", use: createPost)
         postRoutes.get(":userId", use: listPosts)
@@ -20,7 +22,6 @@ struct PostController: RouteCollection {
     struct CreatePostRequest: Content {
         var title: String
         var content: String
-        var userId: UUID
     }
     
     struct ListPostRequest: Content {
@@ -29,7 +30,8 @@ struct PostController: RouteCollection {
     
     func createPost(req: Request) async throws -> Post {
         let data = try req.content.decode(CreatePostRequest.self)
-        let post = Post(title: data.title, content: data.content, userId: data.userId)
+        let user = try req.auth.require(User.self)
+        let post = Post(title: data.title, content: data.content, userId: try user.requireID())
         try await post.save(on: req.db)
 
         return post
